@@ -1,5 +1,5 @@
 """Generate Markov text from text files."""
-
+import sys
 from random import choice
 
 
@@ -21,7 +21,7 @@ def open_and_read_file(file_path):
     return contents_of_file
 
 
-def make_chains(text_string):
+def make_chains(text_string,number_of_grams):
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -47,42 +47,49 @@ def make_chains(text_string):
     """
     words_list = text_string.split()
     chains = {}
-
+    n = number_of_grams
     for i in range(len(words_list)-1):
         
-        new_bigram = (words_list[i], words_list[i+1])
+        new_ngram = words_list[i:i+n]
+        
 
-        if i == len(words_list) - 2:
+        new_ngram = tuple(new_ngram)
+
+        if i == len(words_list) - n:
             
-            if new_bigram in chains:
-                chains[new_bigram] += ['']
+            if new_ngram in chains:
+                chains[new_ngram] += ['']
             else:
-                chains[new_bigram] = ['']
+                chains[new_ngram] = ['']
             break
         
      
-        if new_bigram in chains:
-            chains[new_bigram] += [words_list[i+2]]
+        if new_ngram in chains:
+            chains[new_ngram] += [words_list[i+n]]
         else:
-            chains[new_bigram] = [words_list[i+2]]
+            chains[new_ngram] = [words_list[i+n]]
    
     
     # your code goes here
-
+   
     return chains
 
 
-def make_text(chains):
+def make_text(chains, number_of_grams):
     """Return text from chains."""
 
     words = []
-
+    n = number_of_grams
     first_key = choice(list(chains.keys()))
     words.extend(list(first_key))
 
     while True:
+        new_key = []
+        for word in words[-n:]:
+            new_key.append(word)
 
-        new_key = (words[-2],words[-1])
+        new_key = tuple(new_key)
+        
         if new_key not in chains:
             break
         new_word = choice(chains[new_key])
@@ -95,15 +102,17 @@ def make_text(chains):
     return " ".join(words)
 
 
-input_path = "green-eggs.txt"
+input_path = sys.argv[1]
+
+number_of_grams = 3
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(input_text, number_of_grams)
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_text(chains, number_of_grams)
 
 print(random_text)
