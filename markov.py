@@ -71,7 +71,7 @@ def make_chains(text_string,number_of_grams):
    
     
     # your code goes here
-   
+    # print(chains)
     return chains
 
 
@@ -80,8 +80,15 @@ def make_text(chains, number_of_grams):
 
     words = []
     n = number_of_grams
-    first_key = choice(list(chains.keys()))
-    words.extend(list(first_key))
+    
+    while True:
+
+        first_key = choice(list(chains.keys()))
+        if first_key[0][0].isupper():
+            words.extend(list(first_key))
+            break
+        else:
+            continue
 
     while True:
         new_key = []
@@ -104,7 +111,7 @@ def make_text(chains, number_of_grams):
 
 input_path = sys.argv[1]
 
-number_of_grams = 3
+number_of_grams = 4
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
