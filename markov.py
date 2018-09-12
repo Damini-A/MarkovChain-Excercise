@@ -98,7 +98,15 @@ def make_text(chains, number_of_grams):
         new_key = tuple(new_key)
         
         if new_key not in chains:
+            while True:
+                if words[-2][-1] not in ['.', '?']:
+                # or words[-2][-2] not in ['.', '?']:
+                    words = words[:-2]
+                else:
+                    break  
+                
             break
+
         new_word = choice(chains[new_key])
         words.append(new_word)
 
