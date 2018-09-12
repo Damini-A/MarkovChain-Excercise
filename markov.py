@@ -81,14 +81,14 @@ def make_text(chains, number_of_grams):
     words = []
     n = number_of_grams
     
-    while True:
+    capital_keys = []
+    for key in chains:
+        if key[0][0].isupper():
+            capital_keys.append(key)
 
-        first_key = choice(list(chains.keys()))
-        if first_key[0][0].isupper():
-            words.extend(list(first_key))
-            break
-        else:
-            continue
+    first_key = choice(capital_keys)
+    words.extend(list(first_key))
+    
 
     while True:
         new_key = []
@@ -136,6 +136,8 @@ make_chains(input_text, number_of_grams, chains)
 make_chains(input_text_2, number_of_grams, chains)
 
 #merged_chains = merge_dicts(chains_1, chains_2)
+
+
 
 # Produce random text
 random_text = make_text(chains, number_of_grams)
