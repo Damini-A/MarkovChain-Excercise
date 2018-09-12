@@ -21,7 +21,7 @@ def open_and_read_file(file_path):
     return contents_of_file
 
 
-def make_chains(text_string,number_of_grams):
+def make_chains(text_string,number_of_grams, chains):
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -46,7 +46,7 @@ def make_chains(text_string,number_of_grams):
         [None]
     """
     words_list = text_string.split()
-    chains = {}
+    
     n = number_of_grams
     for i in range(len(words_list)-1):
         
@@ -72,7 +72,7 @@ def make_chains(text_string,number_of_grams):
     
     # your code goes here
     # print(chains)
-    return chains
+    #return chains
 
 
 def make_text(chains, number_of_grams):
@@ -98,12 +98,14 @@ def make_text(chains, number_of_grams):
         new_key = tuple(new_key)
         
         if new_key not in chains:
-            while True:
-                if words[-2][-1] not in ['.', '?']:
-                # or words[-2][-2] not in ['.', '?']:
-                    words = words[:-2]
-                else:
-                    break  
+            if words[-2][-1] not in ['.', '?'] \
+                or words[-2][-2] not in ['.', '?']:
+                words = words[:-2]
+                while True:
+                    if words[-1][-1] not in ['.', '?']:
+                        words = words[:-1]
+                    else:
+                        break  
                 
             break
 
@@ -124,8 +126,16 @@ number_of_grams = 4
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
 
+input_path_2 = sys.argv[2]
+
+input_text_2 = open_and_read_file(input_path_2)
+
 # Get a Markov chain
-chains = make_chains(input_text, number_of_grams)
+chains = {}
+make_chains(input_text, number_of_grams, chains) 
+make_chains(input_text_2, number_of_grams, chains)
+
+#merged_chains = merge_dicts(chains_1, chains_2)
 
 # Produce random text
 random_text = make_text(chains, number_of_grams)
